@@ -58,4 +58,19 @@ FT.ALTER article SCHEMA ADD author TEXT
 //IMPORT DATA FROM REDIS FILE (END WITH .redis)
  redis-cli < data/redis/import_movies.redis
 
+//GET VALUES WITH NUMERIC (WHERE NUM BETWEEN 1995 AND 2000)
+FT.SEARCH movie "@release_year: [1995 2000]" return 1 release_year
+
+//GET VALUES WITH NUMERIC (WHERE NUM > 1995)
+FT.SEARCH movie "@release_year: [1995 + inf]" return 1 release_year
+
+//GET VALUES WITH NUMERIC (WHERE NUM >= 1995)
+FT.SEARCH movie "@release_year: [1995 (inf]" return 1 release_year
+
+//GET VALUES WITH NUMERIC (WHERE NUM < 1995)
+FT.SEARCH movie "@release_year: [-inf (1995]" return 1 release_year
+
+//GET VALUES WITH NUMERIC (WHERE NUM <= 1995)
+FT.SEARCH movie "@release_year: [-inf 1995]" return 1 release_year
+
 
