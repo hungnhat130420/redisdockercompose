@@ -1,0 +1,34 @@
+> HSET movie:1 movie_name "Star Wars: Episode V - The Empire Strikes Back" plot "After the Rebels are brutally overpowered by the Empire on the ice planet Hoth, Luke Skywalker begins Jedi training with Yoda, while his friends are pursued by Darth Vader and a bounty hunter named Boba Fett all over the galaxy." release_year 1980 category "Action" rating 8.7 votes 1127635 imdb_id tt0080684
+
+> HSET movie:2 movie_name "The Godfather" plot "The aging patriarch of an organized crime dynasty transfers control of his clandestine empire to his reluctant son." release_year 1972 category "Drama" rating 9.2 votes 1563839 imdb_id tt0068646
+
+> HSET movie:3 movie_name "Heat" plot "A group of professional bank robbers start to feel the heat from police when they unknowingly leave a clue at their latest heist." release_year 1995 category "Thriller" rating 8.2 votes 559490 imdb_id tt0113277
+
+> HSET movie:4 movie_name "Star Wars: Episode VI - Return of the Jedi" category "Action" votes 906260 rating 8.3 release_year 1983  plot "The Rebels dispatch to Endor to destroy the second Empire's Death Star." imdb_id "tt0086190" 
+
+
+// Create index for redis search example with "article" as the index name
+FT.CREATE article ON HASH PREFIX 1 article: SCHEMA url TAG SEPARATOR "," title TEXT content WEIGHT 5.0 TEXT created_at NUMERIC SORTABLE
+
+FT.CREATE idex:movie ON HASH PREFIX 1 "movie" SCHEMA movie_name TEXT SORTABLE release_year NUMERIC SORTABLE rating NUMERIC SORTABLE category TAG SORTABLE
+
+// Search for articles with the word "redis" in the title
+FT.SEARCH article "redis"
+
+//Search for articles with the word "redis" in the title only return two fields are title and content
+FT.SEARCH article "redis" RETURN 1 title as title 2 content as content
+
+//Get values performing a query on a particular fields
+FT.SEARCH article "@title:redis"
+FT.SEARCH idx:movie "@category:{Thriller|Action} @movie_name:-jedi" return 3 movie_name release_year category
+
+//GET VALUES WITH FUZZY SEARCH
+FT.SEARCH article "%Gdfather%"
+
+//GET VALUES BASE ON VALUE OF THE FIELD
+FT.SEARCH article "@title:{redis|redis*}"
+
+//GET MULTIPLE VALUES FROM A SINGLE FIELD
+FT.SEARCH article "@title:{redis|redis*} @content:{redis|redis*}"
+//GET MULTILE VALUES FROM A MULTIPLE FIELDS
+FT.SEARCH article "@title:{redis|redis*} @content:{redis|redis*}" RETURN 2 title content
