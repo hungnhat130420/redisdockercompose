@@ -30,5 +30,32 @@ FT.SEARCH article "@title:{redis|redis*}"
 
 //GET MULTIPLE VALUES FROM A SINGLE FIELD
 FT.SEARCH article "@title:{redis|redis*} @content:{redis|redis*}"
-//GET MULTILE VALUES FROM A MULTIPLE FIELDS
+
+//GET MULTIPLE VALUES FROM A MULTIPLE FIELDS
 FT.SEARCH article "@title:{redis|redis*} @content:{redis|redis*}" RETURN 2 title content
+
+//GET VALUES BETWEEN A RANGE
+FT.SEARCH article "@release_year:[1970 1980]" RETURN 2 title content
+
+//GET VALUES USING "FILTER" PARAMETER
+FT.SEARCH article * FILTER release_year 1970 1980 RETURN 2 title content
+
+//GET VALUES WITH EXCLUDE VALUES IN FIELD
+FT.SEARCH article "@release_year:[1970 (2000]" RETURN 2 title content
+
+//COUNTING RECORD USING "LIMIT" PARAMETER
+FT.SEARCH article * LIMIT 0 0
+
+//GET ALL INDEXED
+FT._LIST
+
+//GET INFORMATION OF INDEXED
+FT.INFO article
+
+//UPDATE INDEXED
+FT.ALTER article SCHEMA ADD author TEXT
+
+//IMPORT DATA FROM REDIS FILE (END WITH .redis)
+ redis-cli < data/redis/import_movies.redis
+
+
