@@ -12,6 +12,9 @@ FT.CREATE article ON HASH PREFIX 1 article: SCHEMA url TAG SEPARATOR "," title T
 
 FT.CREATE idex:movie ON HASH PREFIX 1 "movie" SCHEMA movie_name TEXT SORTABLE release_year NUMERIC SORTABLE rating NUMERIC SORTABLE category TAG SORTABLE
 
+// GET ALL DATA
+FT.SEARCH article "*"
+
 // Search for articles with the word "redis" in the title
 FT.SEARCH article "redis"
 
@@ -72,5 +75,16 @@ FT.SEARCH movie "@release_year: [-inf (1995]" return 1 release_year
 
 //GET VALUES WITH NUMERIC (WHERE NUM <= 1995)
 FT.SEARCH movie "@release_year: [-inf 1995]" return 1 release_year
+
+//GET VALUES WITH SORTBY FIELD
+FT.SEARCH movie "@category: {Action}" SORTBY  release_year ASC|DSEC return 2 movie_name release_year
+
+//GET VALUES WITH LIMIT : LIMIT (OFFSET) (COUNT) : LIMIT 0 2
+FT.SEARCH movie "@category: {Action}" SORTBY  release_year ASC|DSEC LIMIT 0 2 return 2 movie_name release_year
+
+//GET DATA WITH AGGREGATE
+FT.AGGREGATE movie "*" GROUPBY 1 @release_year
+//GET DATA WITH AGGREGATE and REDUCE
+FT.AGGREGATE movie "*" GROUPBY 1 @category reduce count 0 as total_number
 
 
