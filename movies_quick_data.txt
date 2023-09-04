@@ -84,7 +84,10 @@ FT.SEARCH movie "@category: {Action}" SORTBY  release_year ASC|DSEC LIMIT 0 2 re
 
 //GET DATA WITH AGGREGATE
 FT.AGGREGATE movie "*" GROUPBY 1 @release_year
+
 //GET DATA WITH AGGREGATE and REDUCE
 FT.AGGREGATE movie "*" GROUPBY 1 @category reduce count 0 as total_number
+FT.AGGREGATE movie "*" GROUPBY 1 @category reduce count 0 as total_movies reduce sum 1  votes as total_votes
 
-
+//GET DATA WITH REDUCE
+FT.AGGREGATE user * apply year(@last_login) as year apply dayofmonth(@last_login) as month  GROUPBY 2 @year @month reduce count 0 as count_of_login
