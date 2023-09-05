@@ -91,3 +91,30 @@ FT.AGGREGATE movie "*" GROUPBY 1 @category reduce count 0 as total_movies reduce
 
 //GET DATA WITH REDUCE
 FT.AGGREGATE user * apply year(@last_login) as year apply dayofmonth(@last_login) as month  GROUPBY 2 @year @month reduce count 0 as count_of_login
+
+//GET DATA WITH FILTER
+ft.aggregate idx:user "@gender:{female}" groupby 1 @country reduce count 0 as count_females filter "@country !='china'" sortby 2 @count_females DESC
+
+// SET VALUE WITH REDIS JSON
+JSON.SET FOO . '{"foo": "bar"}'
+
+// GET VALUE WITH REDIS JSON
+JSON.GET FOO
+
+//GET TYPE WITH REDIS JSON
+JSON.TYPE FOO => object
+JSON.TYPE foo .foo => string
+
+//GET STRING LENGTH WITH REDIS JSON
+JSON.STRLEN FOO => 3
+
+json.strappend name '" Doe"'
+
+//GET OBJECT LENGTH AND KEYS
+JSON.OBJLEN FOO => 1
+
+//GET OBJECT KEYS
+json.objkeys foo
+
+// AUTO INCREMENT WITH NUMERIC VALUE\
+JSON.NUMINCRBY foo .age 1
